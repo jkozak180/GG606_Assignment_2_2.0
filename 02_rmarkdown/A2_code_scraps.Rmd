@@ -1,0 +1,125 @@
+---
+title: "A2_code_scraps"
+author: "Julia K"
+date: "2024-03-05"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+list_census_regions("CA01") %>%
+  filter(name=="Winnipeg")
+```
+
+```{r}
+#DAs are just broken down CSDs even further... 
+get_census(dataset="CA01", regions=list(CMA="46602"), 
+            vectors=c("Population density per square kilometre"="v_CA21_6"),level="CSD")
+```
+
+```{r Building Data Frames, include=TRUE}
+#Get 2001 population data from selected vectors for the Kingston region
+CA01_educ_winnipeg=get_census(dataset="CA01", regions=list(CMA="46602"), 
+            vectors=c(CA01_ed_vect$vector), level="CSD")
+```
+
+
+```{r}
+mutate(percentage_interval=cut(percentage, breaks=c(0, 25, 50, 75, 100), labels= 
+                                   c("0-25%", "26-50%", "51-75%", "76-100%"))) %>%   
+```
+
+all_degree_geospatial_fig=
+  plot_grid(CA01_bachelor_fig , CA01_msc_fig, CA01_phd_fig, 
+            CA06_bachelor_fig, CA06_msc_fig, CA06_phd_fig, 
+            CA11_bachelor_fig, CA11_msc_fig, CA11_phd_fig, 
+            CA16_bachelor_fig, CA16_msc_fig, CA16_phd_fig, 
+            CA21_bachelor_fig, CA21_msc_fig, CA21_phd_fig, 
+            ncol=3, nrow=5) 
+
+```{r}
+#if we want all 2001 across (cols=3), then it would go CA01 bachelor, CA01 msc etc.
+all_degree_geospatial_fig=
+  plot_grid(CA01_bachelor_fig + theme(legend.position = "none"), 
+            CA01_msc_fig + theme(legend.position = "none"), 
+            CA01_phd_fig + theme(legend.position = "none"), 
+            CA06_bachelor_fig + theme(legend.position = "none"), 
+            CA06_msc_fig + theme(legend.position = "none"), 
+            CA06_phd_fig + theme(legend.position = "none"), 
+            CA11_bachelor_fig + theme(legend.position = "none"), 
+            CA11_msc_fig + theme(legend.position = "none"), 
+            CA11_phd_fig + theme(legend.position = "none"), 
+            CA16_bachelor_fig + theme(legend.position = "none"), 
+            CA16_msc_fig + theme(legend.position = "none"), 
+            CA16_phd_fig + theme(legend.position = "none"), 
+            CA21_bachelor_fig + theme(legend.position = "none"), 
+            CA21_msc_fig + theme(legend.position = "none"), 
+            CA21_phd_fig + theme(legend.position = "none"), 
+            ncol=3, nrow=5) 
+
+all_degree_geospatial_fig <- all_degree_geospatial_fig + 
+  theme(legend.position = "bottom") +
+  labs(fill = "Degree Type")
+
+# Adjust the size of the text labels
+all_degree_geospatial_fig <- all_degree_geospatial_fig +
+  theme(text = element_text(size = 8))  # Adju            
+        
+
+all_degree_geospatial_fig  
+```
+
+```{r 3.1.1: Q1 Bachelor GIF Figure, include=TRUE}
+#Figure 1: Change in proportion of bachelor degree holders from 2001-2021
+CA_bachelor_01_21 <-
+animation::saveGIF(
+  expr={
+    par(pty="s")                        #set plot aspect ratio to be square
+    plot(CA01_bachelor_fig, width=4.5, height=4.5)
+    plot(CA06_bachelor_fig, width=4.5, height=4.5)
+    plot(CA11_bachelor_fig, width=4.5, height=4.5)
+    plot(CA16_bachelor_fig, width=4.5, height=4.5)
+    plot(CA21_bachelor_fig, width=4.5, height=4.5)
+  },
+  movie.name="CA_bachelor_01_21.gif"
+)
+print(CA_bachelor_01_21)
+```
+
+```{r 3.1.1: Q1.5 MSc GIF Figure, include=TRUE}
+#Figure 1: Change in proportion of bachelor degree holders from 2001-2021
+CA_msc_01_21 <-
+animation::saveGIF(
+  expr= {
+    par(pty="s")                        #set plot aspect ratio to be square
+    plot(CA01_msc_fig, width=4.5, height=4.5)
+    plot(CA06_msc_fig, width=4.5, height=4.5)
+    plot(CA11_msc_fig, width=4.5, height=4.5)
+    plot(CA16_msc_fig, width=4.5, height=4.5)
+    plot(CA21_msc_fig, width=4.5, height=4.5)
+  },
+  movie.name="CA_msc_01_21.gif"
+)
+print(CA_msc_01_21)
+```
+
+```{r 3.1.1: Q2 PhD GIF Figure, include=TRUE}
+#Figure 1: Change in proportion of bachelor degree holders from 2001-2021
+CA_phd_01_21 <-
+animation::saveGIF(
+  expr= {
+    par(pty="s")                        #set plot aspect ratio to be square
+    plot(CA01_phd_fig, width=4.5, height=4.5)
+    plot(CA06_phd_fig, width=4.5, height=4.5)
+    plot(CA11_phd_fig, width=4.5, height=4.5)
+    plot(CA16_phd_fig, width=4.5, height=4.5)
+    plot(CA21_phd_fig, width=4.5, height=4.5)
+  },
+  movie.name="CA_phd_01_21.gif"
+)
+print(CA_phd_01_21)
+```
